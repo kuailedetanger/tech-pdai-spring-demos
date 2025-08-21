@@ -1,0 +1,26 @@
+站在设计者的角度考虑设计IOC容器,主体上应该包含哪几个部分
+加载Bean的配置（比如xml配置）
+  --通过xml 、 通过注解 、 通过java配置类 甚至可以通过property文件了配置都可以。
+根据Bean的定义加载生成Bean的实例，并放置在Bean容器中
+
+除了基础Bean外，还有常规针对企业级业务的特别Bean
+对容器中的Bean提供统一的管理和调用
+  ---统一的获取
+  ---每个对象取一个名称，根据名称来获取对象。
+
+
+
+
+
+Spring IoC的体系结构设计：
+
+**BeanFactory 是 Spring IOC 容器的最顶层接口，它定义了 IOC 容器的基本功能规范**，这些规范包括但不限于：
+ 获取 Bean 实例、判断 Bean 是否存在、检查 Bean 的作用域等，为所有具体的 IOC 容器（如 ApplicationContext）提供了统一的行为标准和基础功能框架。
+
+
+BeanRegistry
+例子：
+比如你写了一个类 UserService，想手动让容器管理它：
+先创建 BeanDefinition（房屋信息表），告诉容器 “这是 UserService 类，单例模式，没有特殊依赖”；
+然后调用 BeanRegistry 里的 registerBeanDefinition("userService", beanDefinition) 方法（相当于给中介前台递信息表）；
+容器就会按这个信息把 UserService 当成自己管理的 Bean，你后续就能从容器里直接拿到它了。
