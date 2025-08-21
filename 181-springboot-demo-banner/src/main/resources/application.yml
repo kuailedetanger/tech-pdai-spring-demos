@@ -1,7 +1,10 @@
+# 服务器相关配置
 server:
-  port: 8080
+  port: 8080  # 配置Spring Boot应用启动时监听的端口号为8080
 
+# Spring框架核心配置
 spring:
+  # 启动Banner（横幅）配置
   banner:
-    charset: UTF-8
-    location: classpath:banner.txt
+    charset: UTF-8  # 设置Banner显示时使用的字符编码为UTF-8，确保中文正常显示
+    location: classpath:banner.txt  # 指定自定义Banner文件的位置，这里指向类路径下的banner.txt文件

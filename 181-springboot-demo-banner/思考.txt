@@ -1,0 +1,1 @@
+spring-configuration-metadata.json 文件可以清晰地告诉你项目中可以修改的配置参数，以及这些参数的详细信息。
