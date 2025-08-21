@@ -1,35 +1,44 @@
+# 服务器配置
 server:
-  port: 8080
+  port: 8080  # 应用程序运行的端口号
+
+# Spring相关配置
 spring:
+  # 数据源配置
   datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:dbtest
-    username: sa
-    password: sa
+    driverClassName: org.h2.Driver  # H2数据库驱动类
+    url: jdbc:h2:mem:dbtest  # H2内存数据库连接地址，数据库名为dbtest
+    username: sa  # 数据库用户名
+    password: sa  # 数据库密码
+
+  # H2数据库控制台配置
   h2:
     console:
-      enabled: true
-      path: /h2
+      enabled: true  # 启用H2数据库控制台
+      path: /h2  # 访问H2控制台的路径，即通过http://localhost:8080/h2访问
       settings:
-        web-allow-others: true
+        web-allow-others: true  # 允许其他机器访问H2控制台
+
+  # JPA配置
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: update  # Hibernate自动更新数据库表结构
+    show-sql: true  # 显示SQL语句
+
+  # 数据库初始化配置
   sql:
     init:
-      platform: h2
-      schema-locations: classpath:db/schema.sql
-      data-locations: classpath:db/data.sql
+      platform: h2  # 数据库平台为H2
+      schema-locations: classpath:db/schema.sql  # 数据库表结构初始化脚本路径
+      data-locations: classpath:db/data.sql  # 数据库初始数据脚本路径
+
+# Knife4j接口文档配置（基于Swagger）
 knife4j:
-  enable: true
+  enable: true  # 启用Knife4j
   setting:
-    # default lang
-    language: en-US
-    # footer
-    enableFooter: false
-    enableFooterCustom: true
-    footerCustomContent: MIT | [Java 全栈](https://pdai.tech)
-    # models
-    enableSwaggerModels: true
-    swaggerModelName: My Models
+    language: en-US  # 默认语言为英文
+    enableFooter: false  # 禁用默认页脚
+    enableFooterCustom: true  # 启用自定义页脚
+    footerCustomContent: MIT | [Java 全栈](https://pdai.tech)  # 自定义页脚内容
+    enableSwaggerModels: true  # 启用Swagger模型展示
+    swaggerModelName: My Models  # 模型展示的名称
