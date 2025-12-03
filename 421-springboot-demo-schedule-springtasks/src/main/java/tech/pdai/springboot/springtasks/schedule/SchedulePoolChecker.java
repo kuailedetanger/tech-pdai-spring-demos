@@ -16,7 +16,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * 用于检查Spring Boot中定时任务线程池的配置信息，
  * 包括核心线程数、活跃线程数等关键参数。
  */
-@Component
+//@Component
 @Slf4j
 public class SchedulePoolChecker {
 
