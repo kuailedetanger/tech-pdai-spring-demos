@@ -1,21 +1,22 @@
+
 server:
-  port: 8080
+  port: 8080 # 服务器端口配置
 
 management:
   endpoints:
-    enabled-by-default: false
+    enabled-by-default: false # 是否默认启用所有端点，设为false表示默认不启用
     web:
-      base-path: /manage
+      base-path: /manage # 管理端点的访问基础路径，所有管理接口都在/manage下
       exposure:
-        include: 'info,health,env,beans,date'
+        include: 'info,health,env,beans,date' # 指定暴露哪些端点，这里开启了info、health、env、beans和date五个端点
   endpoint:
     info:
-      enabled: true
+      enabled: true # 监控端点 info , 本地访问地址 http://localhost:8080/manage/info , 端点作用：查看应用程序的基本信息，如版本、构建时间等
     health:
-      enabled: true
+      enabled: true # 监控端点 health , 本地访问地址 http://localhost:8080/manage/health , 端点作用：检查应用程序的健康状态，包括数据库连接、磁盘空间等
     env:
-      enabled: true
+      enabled: true # 监控端点 env , 本地访问地址 http://localhost:8080/manage/env , 端点作用：显示应用程序的环境变量和配置属性
     beans:
-      enabled: true
+      enabled: true # 监控端点 beans , 本地访问地址 http://localhost:8080/manage/beans , 端点作用：列出Spring应用上下文中所有的bean及其依赖关系
     date:
-      enabled: true
+      enabled: true # 监控端点 date , 本地访问地址 http://localhost:8080/manage/date , 端点作用：显示服务器当前的日期和时间信息
