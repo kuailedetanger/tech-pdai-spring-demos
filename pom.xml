@@ -53,7 +53,7 @@
 <!--        <module>239-springboot-demo-postgre-jpa-druid</module>-->
 <!--        <module>411-springboot-demo-websocket</module>-->
 <!--        <module>412-springboot-demo-websocket-netty</module>-->
-<!--        <module>421-springboot-demo-schedule-springtasks</module>-->
+        <module>421-springboot-demo-schedule-springtasks</module>
 <!--        <module>202-springboot-demo-db-h2-mybatis</module>-->
 <!--        <module>511-springboot-demo-sms-ali</module>-->
         <module>420-springboot-demo-schedule-timer</module>
