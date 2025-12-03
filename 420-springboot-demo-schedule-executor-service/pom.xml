@@ -16,4 +16,14 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <dependencies>
+        <!-- Hutool核心包（包含日期格式化功能） -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>5.8.28</version> <!-- 使用最新稳定版 -->
+        </dependency>
+
+    </dependencies>
+
 </project>

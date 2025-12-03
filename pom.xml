@@ -59,7 +59,7 @@
         <module>420-springboot-demo-schedule-timer</module>
 <!--        <module>422-springboot-demo-schedule-quartz</module>-->
 <!--        <module>423-springboot-demo-schedule-quartz-cluster</module>-->
-<!--        <module>420-springboot-demo-schedule-executor-service</module>-->
+        <module>420-springboot-demo-schedule-executor-service</module>
 <!--        <module>216-springboot-demo-mysql57-mybatis-multi-datasource</module>-->
 <!--        <module>217-springboot-demo-mysql57-mybatis-multi-tenant</module>-->
 <!--        <module>218-springboot-demo-mysql57-mybatis-sharding-jdbc</module>-->
