@@ -127,6 +127,12 @@ public static void scheduleAtFixedRate() {
 
     /**
      * 每秒执行一次，延迟0.5秒执行。
+     *
+     * scheduleAtFixedDelay：每次执行完当前任务后，然后间隔一个period的时间再执行下一个任务； 当某个任务执行周期大于时间间隔时，依然按照间隔时间执行下个任务，即它保证了任务之间执行的间隔。
+     * ------
+     * 著作权归@pdai所有
+     * 原文链接：https://pdai.tech/md/spring/springboot/springboot-x-task-executor-timer.html
+     *
      */
     @SneakyThrows
     public static void scheduleWithFixedDelay() {
@@ -158,8 +164,8 @@ public static void scheduleAtFixedRate() {
 
 //        schedule();
 
-        scheduleAtFixedRate();
+//        scheduleAtFixedRate();
 //
-//        scheduleWithFixedDelay();
+        scheduleWithFixedDelay();
     }
 }
