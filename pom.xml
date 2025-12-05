@@ -37,7 +37,7 @@
 <!--        <module>142-springboot-demo-validation-exception-handler</module>-->
 <!--        <module>143-springboot-demo-validation-i18n</module>-->
 <!--        <module>211-springboot-demo-mysql57-jpa</module>-->
-<!--        <module>212-springboot-demo-mysql57-mybatis-xml</module>-->
+        <module>212-springboot-demo-mysql57-mybatis-xml</module>
 <!--        <module>213-springboot-demo-mysql57-mybatis-anno</module>-->
 <!--        <module>214-springboot-demo-mysql57-mybatisplus-xml</module>-->
 <!--        <module>221-springboot-demo-mysql8-jpa</module>-->
