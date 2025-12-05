@@ -22,7 +22,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 /**
- * swagger config for open api.
+ * swagger配置类，用于配置OpenAPI文档.
  *
  * @author pdai
  */
@@ -31,7 +31,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class OpenApiConfig {
 
     /**
-     * open api extension by knife4j.
+     * Knife4j提供的OpenAPI扩展解析器，用于增强Swagger功能.
      */
     private final OpenApiExtensionResolver openApiExtensionResolver;
 
@@ -41,49 +41,63 @@ public class OpenApiConfig {
     }
 
     /**
-     * @return swagger config
+     * 配置Swagger文档的核心Bean.
+     * 
+     * @return Docket对象，Swagger的主要配置载体
      */
     @Bean
     public Docket openApi() {
+        // 定义API分组名称
         String groupName = "Test Group";
         return new Docket(DocumentationType.OAS_30)
-                .groupName(groupName)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .paths(PathSelectors.any())
-                .build()
-                .globalRequestParameters(getGlobalRequestParameters())
-                .extensions(openApiExtensionResolver.buildExtensions(groupName))
-                .extensions(openApiExtensionResolver.buildSettingExtensions());
+                .groupName(groupName) // 设置分组名称
+                .apiInfo(apiInfo()) // 设置API基本信息
+                .select() // 开始选择API接口
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class)) // 只扫描带有@ApiOperation注解的方法
+                .paths(PathSelectors.any()) // 对所有路径生效
+                .build() // 构建Docket对象
+                .globalRequestParameters(getGlobalRequestParameters()) // 添加全局请求参数
+                .extensions(openApiExtensionResolver.buildExtensions(groupName)) // 添加Knife4j扩展
+                .extensions(openApiExtensionResolver.buildSettingExtensions()); // 添加Knife4j设置扩展
     }
 
     /**
-     * @return global request parameters
+     * 获取全局请求参数列表.
+     * 
+     * @return 全局请求参数列表
+     */
+
+    /**
+     * 获取全局请求参数列表，用于在所有API接口中添加统一的请求参数.
+     * 目前添加了一个名为"AppKey"的可选查询参数，用于应用身份验证.
+     * 
+     * @return 全局请求参数列表，包含AppKey参数配置
      */
     private List<RequestParameter> getGlobalRequestParameters() {
         List<RequestParameter> parameters = new ArrayList<>();
+        // 添加AppKey作为全局查询参数，用于应用身份验证
         parameters.add(new RequestParameterBuilder()
-                .name("AppKey")
-                .description("App Key")
-                .required(false)
-                .in(ParameterType.QUERY)
-                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-                .required(false)
+                .name("AppKey") // 参数名称
+                .description("应用密钥，用于标识和验证调用方身份") // 参数描述
+                .required(false) // 是否必填：否
+                .in(ParameterType.QUERY) // 参数位置：查询参数
+                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING))) // 参数类型：字符串
                 .build());
         return parameters;
     }
 
     /**
-     * @return api info
+     * 构建API基本信息.
+     * 
+     * @return ApiInfo对象，包含API的基本信息
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("My API")
-                .description("test api")
-                .contact(new Contact("pdai", "http://pdai.tech", "suzhou.daipeng@gmail.com"))
-                .termsOfServiceUrl("http://xxxxxx.com/")
-                .version("1.0")
-                .build();
+                .title("My API") // API标题
+                .description("测试用API接口文档") // API描述
+                .contact(new Contact("pdai", "http://pdai.tech", "suzhou.daipeng@gmail.com")) // 联系人信息
+                .termsOfServiceUrl("http://xxxxxx.com/") // 服务条款URL
+                .version("1.0") // 版本号
+                .build(); // 构建ApiInfo对象
     }
 }

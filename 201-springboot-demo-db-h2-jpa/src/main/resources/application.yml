@@ -42,3 +42,4 @@ knife4j:
     footerCustomContent: MIT | [Java 全栈](https://pdai.tech)  # 自定义页脚内容
     enableSwaggerModels: true  # 启用Swagger模型展示
     swaggerModelName: My Models  # 模型展示的名称
+# Knife4j文档访问地址: http://localhost:8080/doc.html
