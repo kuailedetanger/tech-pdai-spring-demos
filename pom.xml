@@ -112,7 +112,7 @@
         <!--        <module>485-springboot-demo-file-online-openoffice</module>-->
         <!--        <module>491-springboot-demo-file-updownload</module>-->
         <!--        <module>492-springboot-demo-file-updownload-bigfile</module>-->
-        <!--        <module>115-springboot-demo-smart-doc</module>-->
+                <module>115-springboot-demo-smart-doc</module>
         <!--        <module>171-springboot-demo-view-thymeleaf3</module>-->
     </modules>
 
