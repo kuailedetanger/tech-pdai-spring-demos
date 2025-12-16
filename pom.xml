@@ -33,7 +33,7 @@
         <!--        <module>111-springboot-demo-swagger-v2</module>-->
         <!--        <module>501-springboot-demo-opcua-milo-server</module>-->
         <!--        <module>502-springboot-demo-opcua-milo-client</module>-->
-        <!--        <module>141-springboot-demo-validation</module>-->
+                <module>141-springboot-demo-validation</module>
         <!--        <module>142-springboot-demo-validation-exception-handler</module>-->
         <!--        <module>143-springboot-demo-validation-i18n</module>-->
         <!--        <module>211-springboot-demo-mysql57-jpa</module>-->
