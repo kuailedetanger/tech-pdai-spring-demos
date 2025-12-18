@@ -435,3 +435,183 @@ public class DemoApplication {
 运行`DemoApplication`，控制台打印 MyBatis 的 SQL 日志，说明配置成功。
 
 ### 2. 接口测试（Postman / 浏览器）
+
+#### （1）新增用户
+
+- 请求地址：`POST http://localhost:8080/user`
+- 请求体（JSON）：
+
+```json
+{
+    "username": "test_mybatis",
+    "password": "123456",
+    "email": "test@demo.com"
+}
+```
+
+- 响应：`新增成功`，数据库 user 表新增一条记录。
+
+#### （2）查询用户
+
+- 请求地址：`GET http://localhost:8080/user/1`
+- 响应：返回 ID=1 的用户信息（含自增 ID、创建时间）。
+
+#### （3）动态修改用户
+
+- 请求地址：`PUT http://localhost:8080/user`
+- 请求体（JSON）：
+
+```json
+{
+    "id": 1,
+    "email": "update@demo.com"
+}
+```
+
+- 响应：`修改成功`，仅更新 email 字段（password/username 不变）。
+
+## 五、核心知识点总结（图文梳理）
+
+### 1. MyBatis XML 方式核心流程
+
+```plaintext
+客户端请求 → Controller → Service → Mapper接口（动态代理）→ Mapper XML（SQL）→ MyBatis框架 → 数据库 → 结果映射 → 返回客户端
+```
+
+### 2. 关键注意事项
+
+| 注意点          | 常见问题                                    | 解决方案                                           |
+| --------------- | ------------------------------------------- | -------------------------------------------------- |
+| namespace 错误  | XML 的 namespace 与 Mapper 接口全类名不一致 | 严格保持一致（复制粘贴避免手写错误）               |
+| 字段映射失败    | 数据库下划线字段未映射为驼峰                | 开启`map-underscore-to-camel-case: true`           |
+| Mapper 注入失败 | 未加`@MapperScan`或扫描包错误               | 启动类添加`@MapperScan("com.example.demo.mapper")` |
+| 动态 SQL 语法错 | if 标签缺少 test、set 标签逗号问题          | 严格遵循 MyBatis 动态 SQL 语法，测试空值判断       |
+
+### 3. MyBatis-Plus 扩展（简化 CRUD）
+
+如果想减少基础 CRUD 的 XML 编写，可集成 MyBatis-Plus：
+
+- 依赖：新增`mybatis-plus-boot-starter`；
+- 核心：`UserMapper`继承`BaseMapper<User>`，直接使用`selectById`/`insert`等方法，无需写 XML；
+- 兼容：复杂 SQL 仍可通过 XML / 注解补充，完全兼容 MyBatis。
+
+## 六、核心价值回顾
+
+MyBatis XML 方式的核心优势：
+
+1. **SQL 与代码分离**：XML 集中管理 SQL，便于 DBA 优化、团队协作；
+2. **动态 SQL 强大**：通过 if/set/where 等标签灵活拼接 SQL，适配复杂业务场景；
+3. **完全掌控 SQL**：比 Hibernate 更易优化性能（如索引、联表查询）；
+4. **SpringBoot 集成简单**：少量配置即可快速上手，兼容主流数据源 / 连接池。
+
+掌握 MyBatis XML 方式，是企业级项目中处理复杂数据库操作的核心技能，也是从 “初级开发” 到 “中级开发” 的关键一步。
+
+
+
+# SpringBoot 集成 MyBatis 案例中数据库连接池的核心解析
+
+在你上述的 SpringBoot+MyBatis 集成案例中，**会自动使用数据库连接池**，且无需手动引入额外连接池依赖 ——SpringBoot 有默认的连接池适配逻辑，下面从 “为什么自动用”“默认连接池是谁”“默认配置值”“如何自定义” 三个维度详细拆解。
+
+## 一、为什么会自动使用连接池？
+
+SpringBoot 对数据库连接池做了 “自动配置”，核心逻辑如下：
+
+1. **依赖传递**：`mybatis-spring-boot-starter` 依赖 `spring-boot-starter-jdbc`，而 `spring-boot-starter-jdbc` 内置了连接池的自动配置逻辑；
+2. **自动配置类**：SpringBoot 的 `DataSourceAutoConfiguration` 会自动检测类路径下的连接池实现，优先选择性能更优的连接池；
+3. **无感知使用**：开发者只需配置`spring.datasource`相关参数，框架会自动创建连接池并管理连接，无需手动编写连接池代码。
+
+## 二、默认的连接池是谁？（SpringBoot 2.x/3.x 差异）
+
+SpringBoot 不同版本的默认连接池不同，核心规则是 “按优先级自动选择”：
+
+| SpringBoot 版本 | 默认连接池                   | 优先级（类路径存在则优先）                  |
+| --------------- | ---------------------------- | ------------------------------------------- |
+| 2.0.x ~ 2.7.x   | HikariCP（默认，最高优先级） | HikariCP > Tomcat JDBC Pool > Commons DBCP2 |
+| 3.0.x+          | HikariCP（唯一默认）         | 仅保留 HikariCP，移除其他连接池的自动配置   |
+
+> 注：在你的案例中，只要引入了`spring-boot-starter-jdbc`（MyBatis starter 已间接引入），且未排除 HikariCP 依赖，默认就是 HikariCP—— 这是目前性能最优的连接池，也是 SpringBoot 官方推荐的。
+
+## 三、默认配置值（核心！HikariCP 默认参数）
+
+HikariCP 的默认配置是 SpringBoot 内置的，无需手动配置即可使用，核心默认值如下表（通俗解释 + 实际含义）：
+
+| 配置项                  | 默认值               | 通俗解释                                    | 实际作用                                                     |
+| ----------------------- | -------------------- | ------------------------------------------- | ------------------------------------------------------------ |
+| `maximum-pool-size`     | 10                   | 连接池最多能创建 10 个数据库连接            | 控制最大并发连接数，避免连接过多压垮数据库                   |
+| `minimum-idle`          | 10（与 max 一致）    | 连接池最少保持 10 个空闲连接                | SpringBoot 2.x 中默认与 max 相同（避免频繁创建 / 销毁连接），3.x 中默认是`5` |
+| `idle-timeout`          | 600000ms（10 分钟）  | 空闲连接超过 10 分钟未使用则被回收          | 释放闲置连接，节省资源                                       |
+| `connection-timeout`    | 30000ms（3 秒）      | 获取连接的超时时间（超过 3 秒没拿到则报错） | 避免线程因等待连接卡死                                       |
+| `max-lifetime`          | 1800000ms（30 分钟） | 一个连接的最大存活时间（超过则强制关闭）    | 防止数据库端关闭连接但客户端不知情                           |
+| `connection-test-query` | 无（自动检测）       | 测试连接是否可用的 SQL（如 SELECT 1）       | HikariCP 会自动适配数据库方言，无需手动配置                  |
+| `pool-name`             | HikariPool-1         | 连接池名称（便于日志排查）                  | 多数据源时区分不同连接池                                     |
+
+### 补充：默认配置的加载来源
+
+这些默认值定义在 SpringBoot 的`HikariDataSourceConfiguration`和 HikariCP 自身的`HikariConfig`类中，无需在`application.yml`中配置，框架会自动生效。
+
+## 四、如何验证 / 修改连接池配置？
+
+### 1. 验证默认连接池（两种方式）
+
+#### 方式 1：查看启动日志
+
+启动项目后，控制台会打印如下日志（说明使用 HikariCP）：
+
+```plaintext
+2025-12-17 10:00:00.000  INFO 12345 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-17 10:00:00.100  INFO 12345 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+```
+
+#### 方式 2：代码验证
+
+在 Controller/Service 中注入`DataSource`，打印其类型：
+
+```java
+@RestController
+@RequestMapping("/test")
+public class TestController {
+
+    @Resource
+    private DataSource dataSource;
+
+    @GetMapping("/datasource")
+    public String testDataSource() {
+        // 打印结果：class com.zaxxer.hikari.HikariDataSource
+        System.out.println("当前连接池类型：" + dataSource.getClass());
+        return "当前连接池类型：" + dataSource.getClass().getSimpleName();
+    }
+}
+```
+
+### 2. 自定义连接池配置（推荐）
+
+默认配置仅适用于开发环境，生产环境建议根据业务调整，在`application.yml`中添加如下配置：
+
+```yaml
+spring:
+  datasource:
+    # 基础连接配置
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybatis_demo?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    # HikariCP自定义配置
+    hikari:
+      maximum-pool-size: 20  # 生产环境根据QPS调整（如20-50）
+      minimum-idle: 5        # 空闲连接数（建议小于max）
+      idle-timeout: 300000   # 5分钟回收空闲连接
+      connection-timeout: 5000 # 5秒获取连接超时
+      max-lifetime: 1800000  # 30分钟连接存活时间
+      pool-name: MyBatisHikariPool # 自定义连接池名称
+      connection-test-query: SELECT 1  # 手动指定测试SQL（可选）
+```
+
+## 五、常见误区澄清
+
+1. **“没配置连接池就不会用”**：错误 ——SpringBoot 的自动配置会默认启用 HikariCP，无需手动配置连接池参数也会生效；
+2. **“默认连接池性能差”**：错误 ——HikariCP 是目前性能最优的连接池（比 Tomcat JDBC、DBCP2 快数倍），默认配置能满足大部分开发场景；
+3. **“必须引入额外连接池依赖”**：错误 ——`mybatis-spring-boot-starter` 间接依赖了 HikariCP，无需单独引入。
+
+## 总结
+
+在你提供的 SpringBoot+MyBatis XML 案例中：✅ 自动使用连接池，默认是**HikariCP**；✅ 核心默认值：最大连接数 10、最小空闲连接 10、获取连接超时 3 秒、空闲连接回收 10 分钟；✅ 生产环境建议自定义`spring.datasource.hikari`参数，适配业务并发量。
