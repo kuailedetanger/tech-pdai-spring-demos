@@ -17,6 +17,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <spring-cloud.version>2020.0.6</spring-cloud.version> <!-- 适配SpringBoot 2.5.14 -->
     </properties>
 
     <dependencies>
@@ -35,7 +36,31 @@
             <version>1.18.20</version>
             <optional>true</optional>
         </dependency>
+
+
+        <!-- Feign核心依赖 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+
+
     </dependencies>
+
+
+    <!-- SpringCloud版本管理 -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

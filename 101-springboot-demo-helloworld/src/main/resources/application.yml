@@ -1,2 +1,18 @@
 server:
   port: 8080
+# 高德天气API配置（抽离配置，避免硬编码）
+weather:
+  amap:
+    url: https://restapi.amap.com
+    key: e489d27d736f8d275f8f679a56151f68 # 测试密钥（可自行去高德开放平台申请）
+
+# Feign配置（可选，基础案例先不配）
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000 # 连接超时5秒
+        readTimeout: 10000    # 读取超时10秒
+  logging:
+    level:
+      com.example.feign.WeatherFeignClient: DEBUG # Feign接口日志级别（调试用）
