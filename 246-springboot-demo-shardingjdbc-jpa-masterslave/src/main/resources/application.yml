@@ -1,84 +1,82 @@
 server:
-  port: 8080
+  port: 8080 # 服务器端口号
 
 spring:
   shardingsphere:
     datasource:
-      names: master,slave0
-      master:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3306/test_db_sharding_master?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&characterEncoding=utf8
-        username: test
-        password: bfXa4Pt2lUUScy8jakXf
-      slave0:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3306/test_db_sharding_slave0?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&characterEncoding=utf8
-        username: test
-        password: bfXa4Pt2lUUScy8jakXf
+      names: master,slave0 # 数据源名称列表，多个用逗号分隔
+      master: # 主数据源配置
+        type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
+        driver-class-name: com.mysql.cj.jdbc.Driver # MySQL 驱动类名
+        jdbc-url: jdbc:mysql://localhost:3306/test_db_sharding_master?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&characterEncoding=utf8 # 主库 JDBC 连接 URL
+        username: test # 数据库用户名
+        password: bfXa4Pt2lUUScy8jakXf # 数据库密码
+      slave0: # 从数据源配置
+        type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
+        driver-class-name: com.mysql.cj.jdbc.Driver # MySQL 驱动类名
+        jdbc-url: jdbc:mysql://localhost:3306/test_db_sharding_slave0?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&characterEncoding=utf8 # 从库 JDBC 连接 URL
+        username: test # 数据库用户名
+        password: bfXa4Pt2lUUScy8jakXf # 数据库密码
     sharding:
       tables:
-        tb_user:
+        tb_user: # 用户表分片配置
           database-strategy:
             inline:
-              sharding-column: id
-              algorithm-expression: master
+              sharding-column: id # 分片字段
+              algorithm-expression: master # 分片算法表达式，路由到 master 库
           key-generator:
-            column: id
-            type: SNOWFLAKE
+            column: id # 主键列
+            type: SNOWFLAKE # 主键生成策略：雪花算法
             props:
               worker:
-                id: 123
-        tb_role:
+                id: 123 # 雪花算法工作器 ID
+        tb_role: # 角色表分片配置
           database-strategy:
             inline:
-              sharding-column: id
-              algorithm-expression: master
+              sharding-column: id # 分片字段
+              algorithm-expression: master # 分片算法表达式，路由到 master 库
           key-generator:
-            column: id
-            type: SNOWFLAKE
+            column: id # 主键列
+            type: SNOWFLAKE # 主键生成策略：雪花算法
             props:
               worker:
-                id: 123
-        tb_user_role:
+                id: 123 # 雪花算法工作器 ID
+        tb_user_role: # 用户角色关联表分片配置
           database-strategy:
             inline:
-              sharding-column: id
-              algorithm-expression: master
+              sharding-column: id # 分片字段
+              algorithm-expression: master # 分片算法表达式，路由到 master 库
           key-generator:
-            column: id
-            type: SNOWFLAKE
+            column: id # 主键列
+            type: SNOWFLAKE # 主键生成策略：雪花算法
             props:
               worker:
-                id: 123
+                id: 123 # 雪花算法工作器 ID
     master-slave:
-        name: ms
-        load-balance-algorithm-type: round_robin
-        master-data-source-name: master
-        slave-data-source-names: slave0
+        name: ms # 主从复制组名称
+        load-balance-algorithm-type: round_robin # 负载均衡算法类型：轮询
+        master-data-source-name: master # 主数据源名称
+        slave-data-source-names: slave0 # 从数据源名称列表
     props:
       sql:
-        show: true
+        show: true # 是否打印 SQL 日志
+
   jpa:
-    open-in-view: false
-    generate-ddl: false
-    show-sql: false
+    open-in-view: false # 是否开启 Open-In-View 模式
+    generate-ddl: false # 是否自动生成 DDL
+    show-sql: false # 是否显示 SQL 语句
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        format_sql: true
-        use-new-id-generator-mappings: false
+        dialect: org.hibernate.dialect.MySQLDialect # Hibernate 方言：MySQL
+        format_sql: true # 是否格式化 SQL 输出
+        use-new-id-generator-mappings: false # 是否使用新的 ID 生成器映射
 
 knife4j:
-  enable: true
+  enable: true # 是否启用 Knife4j
   setting:
-    # default lang
-    language: en-US
-    # footer
-    enableFooter: false
-    enableFooterCustom: true
-    footerCustomContent: MIT | [Java 全栈](https://pdai.tech)
-    # models
-    enableSwaggerModels: true
-    swaggerModelName: My Models
+    language: en-US # 默认语言：英文
+    enableFooter: false # 是否显示默认页脚
+    enableFooterCustom: true # 是否启用自定义页脚
+    footerCustomContent: MIT | [Java 全栈](https://pdai.tech) # 自定义页脚内容
+    enableSwaggerModels: true # 是否显示 Swagger 模型
+    swaggerModelName: My Models # Swagger 模型名称
