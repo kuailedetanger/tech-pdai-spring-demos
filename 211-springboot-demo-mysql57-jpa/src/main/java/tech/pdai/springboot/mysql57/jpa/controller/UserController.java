@@ -61,7 +61,7 @@ public class UserController {
      */
     @ApiOperation("Query User Page")
     @GetMapping("list")
-    public ResponseResult<Page<User>> list(@RequestParam int pageSize, @RequestParam int pageNumber) {
+    public ResponseResult<Page<User>> list(@RequestParam(defaultValue = "10")  int pageSize, @RequestParam(defaultValue = "0")  int pageNumber) {
         return ResponseResult.success(userService.findPage(UserQueryBean.builder().build(), PageRequest.of(pageNumber, pageSize)));
     }
 }
